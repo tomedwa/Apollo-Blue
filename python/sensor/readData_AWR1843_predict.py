@@ -17,10 +17,6 @@ from tensorflow.keras.callbacks import TensorBoard
 
 from sklearn.model_selection import train_test_split
 
-print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
-time.sleep(20)
-
-
 # Change the configuration file name
 configFileName = 'con2d_v3.cfg'
 
