@@ -37,12 +37,12 @@ def serialConfig(configFileName):
     # Open the serial ports for the configuration and the data ports
     
     # Raspberry pi
-    CLIport = serial.Serial('/dev/ttyACM0', 115200)
-    Dataport = serial.Serial('/dev/ttyACM1', 921600)
+    #CLIport = serial.Serial('/dev/ttyACM0', 115200)
+    #Dataport = serial.Serial('/dev/ttyACM1', 921600)
     
     # Windows
-    #CLIport = serial.Serial('COM8', 115200)
-    #Dataport = serial.Serial('COM9', 921600)
+    CLIport = serial.Serial('COM9', 115200)
+    Dataport = serial.Serial('COM10', 921600)
 
     # Read the configuration file and send it to the board
     config = [line.rstrip('\r\n') for line in open(configFileName)]
@@ -366,8 +366,6 @@ for action in actions:
         for frame_num in range(sequence_length):
             
             res = np.load(os.path.join(DATA_PATH, action, str(sequence), "{}.npy".format(frame_num)))
-            if (len(res) != 21):
-                print(action, len(res))
             
             window.append(res)
         sequences.append(window)
@@ -394,6 +392,7 @@ detObj = {}
 
 sequence = []
 sentence = []
+predictions = []
 threshold = 0.9
 keypoints_prev = np.zeros(0)
 found = 0
@@ -408,21 +407,14 @@ while True:
             keypoints_prev = keypoints
             sequence.append(keypoints)
             sequence = sequence[-10:]
-            if len(sequence) == 10:
-                res = model.predict(np.expand_dims(sequence, axis=0))[0]
-                confidence = res[np.argmax(res)]
-                if (res[np.argmax(res)] > threshold):
+        if len(sequence) == 10:
+            res = model.predict(np.expand_dims(sequence, axis=0))[0]           
+            predictions.append(np.argmax(res))
+               
+            if np.unique(predictions[-5:])[0] == np.argmax(res):
+                if res[np.argmax(res)] > threshold:
                     print(actions[np.argmax(res)])
-                    found = 1
-        
-        if found == 1:
-            while(count < 1000):
-                count += 1
-            count = 0
-            found = 0
-
-
-        
+      
         time.sleep(0.025) # Sampling frequency of 30 Hz
         
     # Stop the program and close everything if Ctrl + c is pressed
