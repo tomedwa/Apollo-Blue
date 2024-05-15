@@ -394,6 +394,8 @@ model = load_model("gesture_recognition_model.keras")
 
 start = 0
 
+ready = 1
+
 while True:
     try:
         # Update the data and check if the data is okay
@@ -405,16 +407,20 @@ while True:
             if start == 0 and v != 0:
                 print("CAPTURING")
                 start = 1
+                ready = 1
             elif start == 0 and v == 0:
-                print("READY")
+                if ready == 1:
+                    print("READY")
+                    ready = 0
                 continue
             elif start == 1:
                 pass
             count += 1
 
             if count < n_frames:
-                X_b[count, 0] = keypoints[0]
-                X_b[count, 1] = keypoints[1]
+                if len(keypoints) != 0:
+                    X_b[count, 0] = keypoints[0]
+                    X_b[count, 1] = keypoints[1]
 
             if count == n_frames:
                 start = 0
@@ -423,7 +429,7 @@ while True:
                 pred_data = X_b.flatten()
                 res = model.predict(np.expand_dims(pred_data, axis=0))[0]
 
-                if res[np.argmax(res)] > 0.8:
+                if res[np.argmax(res)] > 0.85:
                     detected_ges = actions[np.argmax(res)]
                     print(np.max(res))
                     print(detected_ges)
@@ -436,9 +442,10 @@ while True:
                     elif detected_ges == "down":
                         pyautogui.press("down")
                 else:
-                    print("nah")
+                    print("No Gesture Detected")
 
                 time.sleep(1)
+                detObj = {}
 
     # Stop the program and close everything if Ctrl + c is pressed
     except KeyboardInterrupt:
