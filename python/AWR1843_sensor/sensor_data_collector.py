@@ -279,7 +279,7 @@ def readAndParseData18xx(Dataport, configParameters):
 # ------------------------------------------------------------------
 
 
-def filter(x, y, num, prev):
+def filter(x, y, v, num, prev):
     zone = [[-0.2, 0.2], [0.1, 0.6]]
     inzone = 0
     for i in range(num):
@@ -288,11 +288,12 @@ def filter(x, y, num, prev):
                 x[i] += 0.00001
             inzone += 1
         else:
-            x[i] = y[i] = 0
+            x[i] = y[i] = v[i] = 0
 
     if inzone > 0:
         x = x[x != 0]
         y = y[y != 0]
+        v = v[v != 0]
 
         num = len(x)
 
@@ -305,11 +306,20 @@ def filter(x, y, num, prev):
         x = kmeans_b.cluster_centers_[:, 0]
         y = kmeans_b.cluster_centers_[:, 1]
 
+        if len(v) == 0:
+            v = np.array([0])
+        else:
+            v = np.array([np.mean(v)])
+
     else:
         x = np.array([prev[0]])
         y = np.array([prev[1]])
+        if prev[2] < 0.01:
+            v = np.array([0])
+        else:
+            v = np.array([prev[2] / 2])
 
-    return x, y
+    return x, y, v
 
 
 # Funtion to update the data and display in the plot
@@ -318,6 +328,7 @@ def update(prev_keypoints):
     global detObj
     x = []
     y = []
+    v = []
     keypoints = []
 
     # Read and parse the received data
@@ -326,10 +337,11 @@ def update(prev_keypoints):
     if dataOk and len(detObj["x"]) > 0:
         x = detObj["x"]
         y = detObj["y"]
+        v = detObj["velocity"]
         numObj = detObj["numObj"]
 
-        x, y = filter(x, y, numObj, prev_keypoints)
-        keypoints = np.concatenate([x, y])
+        x, y, v = filter(x, y, v, numObj, prev_keypoints)
+        keypoints = np.concatenate([x, y, v])
         s.setData(x, y)
         QtWidgets.QApplication.processEvents()
 
@@ -361,21 +373,21 @@ win.show()
 
 # Main loop
 detObj = {}
-keypoints_prev = np.zeros(2)
+keypoints_prev = np.zeros(3)
 
 frame_number = 0
 n_frames = 30
 count_down = 2
-sequence_number = 60
+sequence_number = 30
 count_down_num = 3
-action_index = 3
-max_sequence = 90
+action_index = 5
+max_sequence = 60
 
 dlen = 2
-X_b = np.zeros((n_frames, 2))
+X_b = np.zeros((n_frames, 3))
 
 DATA_PATH = os.path.join("gesture_data")  # path for exported np arrays
-actions = ["left", "right", "up", "down"]
+actions = ["left", "right", "up", "down", "r_left", "r_right"]
 print("Finished Collecting", actions[action_index], "data")
 while True:
     try:
@@ -407,6 +419,7 @@ while True:
             if count_down == count_down_num:
                 X_b[frame_number, 0] = keypoints[0]
                 X_b[frame_number, 1] = keypoints[1]
+                X_b[frame_number, 2] = keypoints[2]
 
                 print(sequence_number, count_down, frame_number, "Collecting")
             else:

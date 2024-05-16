@@ -2,8 +2,8 @@ import numpy as np
 import os
 
 # Define the folders and corresponding labels
-folders = ["left", "right", "up", "down"]
-labels_dict = {"left": 0, "right": 1, "up": 2, "down": 3}
+folders = ["left", "right", "up", "down", "r_left", "r_right"]
+labels_dict = {"left": 0, "right": 1, "up": 2, "down": 3, "r_left": 4, "r_right": 5}
 
 # Initialize lists to hold features and labels
 all_features = []
