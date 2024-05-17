@@ -21,6 +21,13 @@ bind_r_left = []
 bind_r_right = []
 received_gesture_bool = False
 
+switch_state_left = False
+switch_state_right = False
+switch_state_up = False
+switch_state_down = False
+switch_state_r_left = False
+switch_state_r_right = False
+
 
 class App(customtkinter.CTk):
     def __init__(self):
@@ -273,35 +280,47 @@ class App(customtkinter.CTk):
             row=0, column=0, columnspan=1, padx=10, pady=10, sticky=""
         )
 
-        switch_swipe_left = customtkinter.CTkSwitch(
-            master=self.frame_toggle_gestures, text="Swipe Left"
+        self.switch_swipe_left = customtkinter.CTkSwitch(
+            master=self.frame_toggle_gestures,
+            text="Swipe Left",
+            command=lambda: self.switch_state_changed("left"),
         )
-        switch_swipe_left.grid(row=1, column=0, padx=10, pady=(0, 20), sticky="w")
+        self.switch_swipe_left.grid(row=1, column=0, padx=10, pady=(0, 20), sticky="w")
 
-        switch_swipe_right = customtkinter.CTkSwitch(
-            master=self.frame_toggle_gestures, text="Swipe Right"
+        self.switch_swipe_right = customtkinter.CTkSwitch(
+            master=self.frame_toggle_gestures,
+            text="Swipe Right",
+            command=lambda: self.switch_state_changed("right"),
         )
-        switch_swipe_right.grid(row=2, column=0, padx=10, pady=(0, 20), sticky="w")
+        self.switch_swipe_right.grid(row=2, column=0, padx=10, pady=(0, 20), sticky="w")
 
-        switch_swipe_up = customtkinter.CTkSwitch(
-            master=self.frame_toggle_gestures, text="Swipe Up"
+        self.switch_swipe_up = customtkinter.CTkSwitch(
+            master=self.frame_toggle_gestures,
+            text="Swipe Up",
+            command=lambda: self.switch_state_changed("up"),
         )
-        switch_swipe_up.grid(row=3, column=0, padx=10, pady=(0, 20), sticky="w")
+        self.switch_swipe_up.grid(row=3, column=0, padx=10, pady=(0, 20), sticky="w")
 
-        switch_swipe_down = customtkinter.CTkSwitch(
-            master=self.frame_toggle_gestures, text="Swipe Down"
+        self.switch_swipe_down = customtkinter.CTkSwitch(
+            master=self.frame_toggle_gestures,
+            text="Swipe Down",
+            command=lambda: self.switch_state_changed("down"),
         )
-        switch_swipe_down.grid(row=4, column=0, padx=10, pady=(0, 20), sticky="w")
+        self.switch_swipe_down.grid(row=4, column=0, padx=10, pady=(0, 20), sticky="w")
 
-        switch_r_left = customtkinter.CTkSwitch(
-            master=self.frame_toggle_gestures, text="Rotate Left"
+        self.switch_r_left = customtkinter.CTkSwitch(
+            master=self.frame_toggle_gestures,
+            text="Rotate Left",
+            command=lambda: self.switch_state_changed("r_left"),
         )
-        switch_r_left.grid(row=5, column=0, padx=10, pady=(0, 20), sticky="w")
+        self.switch_r_left.grid(row=5, column=0, padx=10, pady=(0, 20), sticky="w")
 
-        switch_r_right = customtkinter.CTkSwitch(
-            master=self.frame_toggle_gestures, text="Rotate Right"
+        self.switch_r_right = customtkinter.CTkSwitch(
+            master=self.frame_toggle_gestures,
+            text="Rotate Right",
+            command=lambda: self.switch_state_changed("r_right"),
         )
-        switch_r_right.grid(row=6, column=0, padx=10, pady=(0, 20), sticky="w")
+        self.switch_r_right.grid(row=6, column=0, padx=10, pady=(0, 20), sticky="w")
 
         # set default values
         self.sidebar_button_3.configure(state="disabled", text="Disabled CTkButton")
@@ -326,6 +345,28 @@ class App(customtkinter.CTk):
 
     def keypress(self, keyname: str):
         print(keyname)
+
+    def switch_state_changed(self, gesture: str):
+        global \
+            switch_state_left, \
+            switch_state_right, \
+            switch_state_up, \
+            switch_state_down, \
+            switch_state_r_left, \
+            switch_state_r_right
+
+        if gesture == "left":
+            switch_state_left = self.switch_swipe_left.get()
+        elif gesture == "right":
+            switch_state_right = self.switch_swipe_right.get()
+        elif gesture == "up":
+            switch_state_up = self.switch_swipe_up.get()
+        elif gesture == "down":
+            switch_state_down = self.switch_swipe_down.get()
+        elif gesture == "r_left":
+            switch_state_r_left = self.switch_r_left.get()
+        elif gesture == "r_right":
+            switch_state_r_right = self.switch_r_right.get()
 
     def set_new_keybinding(self, gesture: str, binding: str):
         global bind_left, bind_right, bind_up, bind_down, bind_r_left, bind_r_right
@@ -381,7 +422,7 @@ class App(customtkinter.CTk):
         return True
 
 
-def thread_test():
+def serial_thread():
     global \
         bind_left, \
         bind_right, \
@@ -389,8 +430,13 @@ def thread_test():
         bind_down, \
         bind_r_left, \
         bind_r_right, \
-        received_gesture_bool
-    count = 0
+        received_gesture_bool, \
+        switch_state_left, \
+        switch_state_right, \
+        switch_state_up, \
+        switch_state_down, \
+        switch_state_r_left, \
+        switch_state_r_right
 
     while True:
         try:
@@ -420,32 +466,32 @@ def thread_test():
                     continue
 
                 if line:
-                    if line == "left":
+                    if line == "left" and switch_state_left:
                         if len(bind_left) == 1:
                             pyautogui.press(bind_left[0])
                         elif len(bind_left) > 1:
                             pyautogui.hotkey(bind_left)
-                    elif line == "right":
+                    elif line == "right" and switch_state_right:
                         if len(bind_right) == 1:
                             pyautogui.press(bind_right[0])
                         elif len(bind_right) > 1:
                             pyautogui.hotkey(bind_right)
-                    elif line == "up":
+                    elif line == "up" and switch_state_up:
                         if len(bind_up) == 1:
                             pyautogui.press(bind_up[0])
                         elif len(bind_up) > 1:
                             pyautogui.hotkey(bind_up)
-                    elif line == "down":
+                    elif line == "down" and switch_state_down:
                         if len(bind_down) == 1:
                             pyautogui.press(bind_down[0])
                         elif len(bind_down) > 1:
                             pyautogui.hotkey(bind_down)
-                    elif line == "r_left":
+                    elif line == "r_left" and switch_state_r_left:
                         if len(bind_r_left) == 1:
                             pyautogui.press(bind_r_left[0])
                         elif len(bind_r_left) > 1:
                             pyautogui.hotkey(bind_r_left)
-                    elif line == "r_right":
+                    elif line == "r_right" and switch_state_r_right:
                         if len(bind_r_right) == 1:
                             pyautogui.press(bind_r_right[0])
                         elif len(bind_r_right) > 1:
@@ -457,24 +503,6 @@ def thread_test():
             ser.close()
 
         time.sleep(0.1)
-
-    while True:
-        if count == 0:
-            print(bind_left)
-        elif count == 1:
-            print(bind_right)
-        elif count == 2:
-            print(bind_up)
-        elif count == 3:
-            print(bind_down)
-        elif count == 4:
-            print(bind_r_left)
-        elif count == 5:
-            print(bind_r_right)
-        count = (count + 1) % 6
-        if not received_gesture_bool:
-            received_gesture_bool = True
-        time.sleep(1)
 
 
 def thread_for_app():
@@ -491,9 +519,9 @@ def press_combination(keys):
 
 
 if __name__ == "__main__":
-    test_thread = threading.Thread(target=thread_test)
-    test_thread.daemon = True
-    test_thread.start()
+    thread_serial = threading.Thread(target=serial_thread)
+    thread_serial.daemon = True
+    thread_serial.start()
 
     app_thread = threading.Thread(target=thread_for_app)
     app_thread.daemon = True
