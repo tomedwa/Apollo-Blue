@@ -122,7 +122,11 @@ class App(customtkinter.CTk):
         self.entry_left_set_binding.grid(row=1, column=2, sticky="")
 
         self.button_confirm_left = customtkinter.CTkButton(
-            master=self.frame_keybinding, text="Set"
+            master=self.frame_keybinding,
+            text="Set",
+            command=lambda: self.set_new_keybinding(
+                "left", self.entry_left_set_binding.get()
+            ),
         )
         self.button_confirm_left.grid(row=1, column=3, padx=20, pady=20, sticky="")
 
@@ -142,7 +146,11 @@ class App(customtkinter.CTk):
         self.entry_right_set_binding.grid(row=2, column=2, sticky="")
 
         self.button_confirm_right = customtkinter.CTkButton(
-            master=self.frame_keybinding, text="Set"
+            master=self.frame_keybinding,
+            text="Set",
+            command=lambda: self.set_new_keybinding(
+                "right", self.entry_right_set_binding.get()
+            ),
         )
         self.button_confirm_right.grid(row=2, column=3, padx=20, pady=20, sticky="")
 
@@ -162,7 +170,11 @@ class App(customtkinter.CTk):
         self.entry_up_set_binding.grid(row=3, column=2, sticky="")
 
         self.button_confirm_up = customtkinter.CTkButton(
-            master=self.frame_keybinding, text="Set"
+            master=self.frame_keybinding,
+            text="Set",
+            command=lambda: self.set_new_keybinding(
+                "up", self.entry_up_set_binding.get()
+            ),
         )
         self.button_confirm_up.grid(row=3, column=3, padx=20, pady=20, sticky="")
 
@@ -182,7 +194,11 @@ class App(customtkinter.CTk):
         self.entry_down_set_binding.grid(row=4, column=2, sticky="")
 
         self.button_confirm_down = customtkinter.CTkButton(
-            master=self.frame_keybinding, text="Set"
+            master=self.frame_keybinding,
+            text="Set",
+            command=lambda: self.set_new_keybinding(
+                "down", self.entry_down_set_binding.get()
+            ),
         )
         self.button_confirm_down.grid(row=4, column=3, padx=20, pady=20, sticky="")
 
@@ -202,7 +218,11 @@ class App(customtkinter.CTk):
         self.entry_r_left_set_binding.grid(row=5, column=2, sticky="")
 
         self.button_confirm_r_left = customtkinter.CTkButton(
-            master=self.frame_keybinding, text="Set"
+            master=self.frame_keybinding,
+            text="Set",
+            command=lambda: self.set_new_keybinding(
+                "r_left", self.entry_r_left_set_binding.get()
+            ),
         )
         self.button_confirm_r_left.grid(row=5, column=3, padx=20, pady=20, sticky="")
 
@@ -222,7 +242,11 @@ class App(customtkinter.CTk):
         self.entry_r_right_set_binding.grid(row=6, column=2, sticky="")
 
         self.button_confirm_r_right = customtkinter.CTkButton(
-            master=self.frame_keybinding, text="Set"
+            master=self.frame_keybinding,
+            text="Set",
+            command=lambda: self.set_new_keybinding(
+                "r_right", self.entry_r_right_set_binding.get()
+            ),
         )
         self.button_confirm_r_right.grid(row=6, column=3, padx=20, pady=20, sticky="")
 
@@ -291,6 +315,20 @@ class App(customtkinter.CTk):
 
     def keypress(self, keyname: str):
         print(keyname)
+
+    def set_new_keybinding(self, gesture: str, binding: str):
+        if gesture == "left":
+            self.label_left_current.configure(text=binding)
+        elif gesture == "right":
+            self.label_right_current.configure(text=binding)
+        elif gesture == "up":
+            self.label_up_current.configure(text=binding)
+        elif gesture == "down":
+            self.label_down_current.configure(text=binding)
+        elif gesture == "r_left":
+            self.label_r_left_current.configure(text=binding)
+        elif gesture == "r_right":
+            self.label_r_right_current.configure(text=binding)
 
 
 def thread_test():
