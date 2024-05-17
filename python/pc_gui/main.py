@@ -17,8 +17,8 @@ class App(customtkinter.CTk):
 
         # configure window
         self.title("Apollo Blue")
-        self.geometry(f"{1100}x{580}")
-        self.minsize(970, 400)
+        self.geometry(f"{950}x{580}")
+        self.minsize(950, 580)
 
         # configure grid layout (4x4)
         self.grid_columnconfigure(1, weight=1)
@@ -93,78 +93,138 @@ class App(customtkinter.CTk):
         self.label_binding_gesture_title = customtkinter.CTkLabel(
             master=self.frame_keybinding, padx=20, pady=20, text="Gesture"
         )
-        self.label_binding_gesture_title.grid(row=0, column=0, sticky="nsw")
+        self.label_binding_gesture_title.grid(row=0, column=0, sticky="")
 
         self.label_binding_current_title = customtkinter.CTkLabel(
             master=self.frame_keybinding, padx=20, pady=20, text="Curent Binding"
         )
-        self.label_binding_current_title.grid(row=0, column=1, sticky="nsw")
+        self.label_binding_current_title.grid(row=0, column=1, sticky="")
 
         self.label_binding_set_title = customtkinter.CTkLabel(
             master=self.frame_keybinding, padx=20, pady=20, text="Set Binding"
         )
-        self.label_binding_set_title.grid(row=0, column=2, sticky="nsw")
+        self.label_binding_set_title.grid(row=0, column=2, sticky="")
 
         self.label_left_bind = customtkinter.CTkLabel(
             master=self.frame_keybinding, padx=20, pady=20, text="Left Swipe"
         )
-        self.label_left_bind.grid(row=1, column=0, sticky="nsw")
+        self.label_left_bind.grid(row=1, column=0, sticky="")
 
         self.label_left_current = customtkinter.CTkLabel(
             master=self.frame_keybinding, padx=20, pady=20, text="none"
         )
-        self.label_left_current.grid(row=1, column=1, sticky="nsw")
+        self.label_left_current.grid(row=1, column=1, sticky="")
         self.label_left_current.configure(text="none")
+
+        self.entry_left_set_binding = customtkinter.CTkEntry(
+            self.frame_keybinding, placeholder_text="Enter new binding"
+        )
+        self.entry_left_set_binding.grid(row=1, column=2, sticky="")
+
+        self.button_confirm_left = customtkinter.CTkButton(
+            master=self.frame_keybinding, text="Set"
+        )
+        self.button_confirm_left.grid(row=1, column=3, padx=20, pady=20, sticky="")
 
         self.label_right_bind = customtkinter.CTkLabel(
             master=self.frame_keybinding, padx=20, pady=20, text="Right Swipe"
         )
-        self.label_right_bind.grid(row=2, column=0, sticky="nsw")
+        self.label_right_bind.grid(row=2, column=0, sticky="")
 
         self.label_right_current = customtkinter.CTkLabel(
             master=self.frame_keybinding, padx=20, pady=20, text="none"
         )
-        self.label_right_current.grid(row=2, column=1, sticky="nsw")
+        self.label_right_current.grid(row=2, column=1, sticky="")
+
+        self.entry_right_set_binding = customtkinter.CTkEntry(
+            self.frame_keybinding, placeholder_text="Enter new binding"
+        )
+        self.entry_right_set_binding.grid(row=2, column=2, sticky="")
+
+        self.button_confirm_right = customtkinter.CTkButton(
+            master=self.frame_keybinding, text="Set"
+        )
+        self.button_confirm_right.grid(row=2, column=3, padx=20, pady=20, sticky="")
 
         self.label_up_bind = customtkinter.CTkLabel(
             master=self.frame_keybinding, padx=20, pady=20, text="Up Swipe"
         )
-        self.label_up_bind.grid(row=3, column=0, sticky="nsw")
+        self.label_up_bind.grid(row=3, column=0, sticky="")
 
         self.label_up_current = customtkinter.CTkLabel(
             master=self.frame_keybinding, padx=20, pady=20, text="none"
         )
-        self.label_up_current.grid(row=3, column=1, sticky="nsw")
+        self.label_up_current.grid(row=3, column=1, sticky="")
+
+        self.entry_up_set_binding = customtkinter.CTkEntry(
+            self.frame_keybinding, placeholder_text="Enter new binding"
+        )
+        self.entry_up_set_binding.grid(row=3, column=2, sticky="")
+
+        self.button_confirm_up = customtkinter.CTkButton(
+            master=self.frame_keybinding, text="Set"
+        )
+        self.button_confirm_up.grid(row=3, column=3, padx=20, pady=20, sticky="")
 
         self.label_down_bind = customtkinter.CTkLabel(
             master=self.frame_keybinding, padx=20, pady=20, text="Down Swipe"
         )
-        self.label_down_bind.grid(row=4, column=0, sticky="nsw")
+        self.label_down_bind.grid(row=4, column=0, sticky="")
 
         self.label_down_current = customtkinter.CTkLabel(
             master=self.frame_keybinding, padx=20, pady=20, text="none"
         )
-        self.label_down_current.grid(row=4, column=1, sticky="nsw")
+        self.label_down_current.grid(row=4, column=1, sticky="")
+
+        self.entry_down_set_binding = customtkinter.CTkEntry(
+            self.frame_keybinding, placeholder_text="Enter new binding"
+        )
+        self.entry_down_set_binding.grid(row=4, column=2, sticky="")
+
+        self.button_confirm_down = customtkinter.CTkButton(
+            master=self.frame_keybinding, text="Set"
+        )
+        self.button_confirm_down.grid(row=4, column=3, padx=20, pady=20, sticky="")
 
         self.label_r_left_bind = customtkinter.CTkLabel(
             master=self.frame_keybinding, padx=20, pady=20, text="Rotate Left"
         )
-        self.label_r_left_bind.grid(row=5, column=0, sticky="nsw")
+        self.label_r_left_bind.grid(row=5, column=0, sticky="")
 
         self.label_r_left_current = customtkinter.CTkLabel(
             master=self.frame_keybinding, padx=20, pady=20, text="none"
         )
-        self.label_r_left_current.grid(row=5, column=1, sticky="nsw")
+        self.label_r_left_current.grid(row=5, column=1, sticky="")
+
+        self.entry_r_left_set_binding = customtkinter.CTkEntry(
+            self.frame_keybinding, placeholder_text="Enter new binding"
+        )
+        self.entry_r_left_set_binding.grid(row=5, column=2, sticky="")
+
+        self.button_confirm_r_left = customtkinter.CTkButton(
+            master=self.frame_keybinding, text="Set"
+        )
+        self.button_confirm_r_left.grid(row=5, column=3, padx=20, pady=20, sticky="")
 
         self.label_r_right_bind = customtkinter.CTkLabel(
             master=self.frame_keybinding, padx=20, pady=20, text="Rotate Right"
         )
-        self.label_r_right_bind.grid(row=6, column=0, sticky="nsw")
+        self.label_r_right_bind.grid(row=6, column=0, sticky="")
 
         self.label_r_right_current = customtkinter.CTkLabel(
             master=self.frame_keybinding, padx=20, pady=20, text="none"
         )
-        self.label_r_right_current.grid(row=6, column=1, sticky="nsw")
+        self.label_r_right_current.grid(row=6, column=1, sticky="")
+
+        self.entry_r_right_set_binding = customtkinter.CTkEntry(
+            self.frame_keybinding, placeholder_text="Enter new binding"
+        )
+        self.entry_r_right_set_binding.grid(row=6, column=2, sticky="")
+
+        self.button_confirm_r_right = customtkinter.CTkButton(
+            master=self.frame_keybinding, text="Set"
+        )
+        self.button_confirm_r_right.grid(row=6, column=3, padx=20, pady=20, sticky="")
 
         # Toggle Gestures Frame
         self.frame_toggle_gestures = customtkinter.CTkFrame(self)
