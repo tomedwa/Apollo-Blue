@@ -4,6 +4,7 @@ import customtkinter
 import threading
 import time
 import pyautogui
+import serial
 
 customtkinter.set_appearance_mode(
     "System"
@@ -390,6 +391,56 @@ def thread_test():
         bind_r_right, \
         received_gesture_bool
     count = 0
+
+    ser = serial.Serial(
+        port="/dev/ttyACM0",  # Replace with your port name (e.g., '/dev/ttyUSB0' on Linux, 'COM3' on Windows)
+        baudrate=115200,  # Adjust baudrate as per your device's specification
+        timeout=1,  # Timeout in seconds for read operations
+    )
+
+    if ser.is_open:
+        print("Serial port is open")
+
+    # Read data from the serial port
+
+    while True:
+        # Read a line from the serial port
+        line = ser.readline().decode("utf-8").strip()
+
+        if line:
+            if line == "left":
+                if len(bind_left) == 1:
+                    pyautogui.press(bind_left[0])
+                elif len(bind_left) > 1:
+                    pyautogui.hotkey(bind_left)
+            elif line == "right":
+                if len(bind_right) == 1:
+                    pyautogui.press(bind_right[0])
+                elif len(bind_right) > 1:
+                    pyautogui.hotkey(bind_right)
+            elif line == "up":
+                if len(bind_up) == 1:
+                    pyautogui.press(bind_up[0])
+                elif len(bind_up) > 1:
+                    pyautogui.hotkey(bind_up)
+            elif line == "down":
+                if len(bind_down) == 1:
+                    pyautogui.press(bind_down[0])
+                elif len(bind_down) > 1:
+                    pyautogui.hotkey(bind_down)
+            elif line == "r_left":
+                if len(bind_r_left) == 1:
+                    pyautogui.press(bind_r_left[0])
+                elif len(bind_r_left) > 1:
+                    pyautogui.hotkey(bind_r_left)
+            elif line == "r_right":
+                if len(bind_r_right) == 1:
+                    pyautogui.press(bind_r_right[0])
+                elif len(bind_r_right) > 1:
+                    pyautogui.hotkey(bind_r_right)
+
+        time.sleep(0.1)
+
     while True:
         if count == 0:
             print(bind_left)
@@ -434,3 +485,4 @@ if __name__ == "__main__":
     while 1:
         if received_gesture_bool:
             received_gesture_bool = False
+        time.sleep(0.2)
