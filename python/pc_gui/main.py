@@ -2,6 +2,8 @@ import tkinter
 import tkinter.messagebox
 import customtkinter
 import threading
+import time
+import pyautogui
 
 customtkinter.set_appearance_mode(
     "System"
@@ -9,6 +11,14 @@ customtkinter.set_appearance_mode(
 customtkinter.set_default_color_theme(
     "dark-blue"
 )  # Themes: "blue" (standard), "green", "dark-blue"
+
+bind_left = []
+bind_right = []
+bind_up = []
+bind_down = []
+bind_r_left = []
+bind_r_right = []
+received_gesture_bool = False
 
 
 class App(customtkinter.CTk):
@@ -317,33 +327,110 @@ class App(customtkinter.CTk):
         print(keyname)
 
     def set_new_keybinding(self, gesture: str, binding: str):
-        if gesture == "left":
-            self.label_left_current.configure(text=binding)
-        elif gesture == "right":
-            self.label_right_current.configure(text=binding)
-        elif gesture == "up":
-            self.label_up_current.configure(text=binding)
-        elif gesture == "down":
-            self.label_down_current.configure(text=binding)
-        elif gesture == "r_left":
-            self.label_r_left_current.configure(text=binding)
-        elif gesture == "r_right":
-            self.label_r_right_current.configure(text=binding)
+        global bind_left, bind_right, bind_up, bind_down, bind_r_left, bind_r_right
+
+        ret = self.check_valid_shortcut(binding)
+
+        if ret:
+            if gesture == "left":
+                self.label_left_current.configure(text=binding)
+                bind_left = binding.split(",")
+            elif gesture == "right":
+                self.label_right_current.configure(text=binding)
+                bind_right = binding.split(",")
+            elif gesture == "up":
+                self.label_up_current.configure(text=binding)
+                bind_up = binding.split(",")
+            elif gesture == "down":
+                self.label_down_current.configure(text=binding)
+                bind_down = binding.split(",")
+            elif gesture == "r_left":
+                self.label_r_left_current.configure(text=binding)
+                bind_r_left = binding.split(",")
+            elif gesture == "r_right":
+                self.label_r_right_current.configure(text=binding)
+                bind_r_right = binding.split(",")
+
+    def check_valid_shortcut(self, binding: str) -> bool:
+        valid_letters_and_numbers = list("1234567890qwertyuiopasdfghjklzxcvbnm")
+        valid_symbols = list("!@#$%^&*()-_=+;:',<.>? ")
+        valid_other = [
+            "esc",
+            "backspace",
+            "del",
+            "tab",
+            "capslock",
+            "enter",
+            "shift",
+            "ctrl",
+            "alt",
+            "space",
+            "left",
+            "right",
+            "up",
+            "down",
+        ]
+        valid = valid_letters_and_numbers + valid_symbols + valid_other
+        check_this = binding.split(",")
+        for word in check_this:
+            if word in valid:
+                pass
+            else:
+                return False
+        return True
 
 
 def thread_test():
-    import time
-
+    global \
+        bind_left, \
+        bind_right, \
+        bind_up, \
+        bind_down, \
+        bind_r_left, \
+        bind_r_right, \
+        received_gesture_bool
+    count = 0
     while True:
-        print("test")
+        if count == 0:
+            print(bind_left)
+        elif count == 1:
+            print(bind_right)
+        elif count == 2:
+            print(bind_up)
+        elif count == 3:
+            print(bind_down)
+        elif count == 4:
+            print(bind_r_left)
+        elif count == 5:
+            print(bind_r_right)
+        count = (count + 1) % 6
+        if not received_gesture_bool:
+            received_gesture_bool = True
         time.sleep(1)
 
 
-if __name__ == "__main__":
+def thread_for_app():
     app = App()
+    app.mainloop()
 
+
+def press_key(key):
+    pyautogui.press(key)
+
+
+def press_combination(keys):
+    pyautogui.hotkey(keys)
+
+
+if __name__ == "__main__":
     test_thread = threading.Thread(target=thread_test)
     test_thread.daemon = True
     test_thread.start()
 
-    app.mainloop()
+    app_thread = threading.Thread(target=thread_for_app)
+    app_thread.daemon = True
+    app_thread.start()
+
+    while 1:
+        if received_gesture_bool:
+            received_gesture_bool = False
