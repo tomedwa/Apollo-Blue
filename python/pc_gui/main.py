@@ -30,6 +30,8 @@ switch_state_down = False
 switch_state_r_left = False
 switch_state_r_right = False
 
+exit_flag = False
+
 
 class App(customtkinter.CTk):
     def __init__(self):
@@ -440,10 +442,8 @@ class App(customtkinter.CTk):
     def set_switch_state(self, gesture: str, state: bool):
         if gesture == "left":
             if state:
-                print("balls")
                 self.switch_swipe_left.select()
             else:
-                print("cock")
                 self.switch_swipe_left.deselect()
 
         elif gesture == "right":
@@ -495,8 +495,6 @@ class App(customtkinter.CTk):
                     self.set_switch_state("r_left", data["switch_state_r_left"])
                     self.set_switch_state("r_right", data["switch_state_r_right"])
 
-                print(type(data["switch_state_left"]))
-
             except json.JSONDecodeError:
                 print(f"Invalid json data in {file_path}")
 
@@ -515,11 +513,12 @@ def serial_thread():
         switch_state_up, \
         switch_state_down, \
         switch_state_r_left, \
-        switch_state_r_right
+        switch_state_r_right, \
+        exit_flag
 
     print_not_con = True
 
-    while True:
+    while not exit_flag:
         try:
             ser = serial.Serial(
                 port="/dev/ttyACM0",  # Replace with your port name (e.g., '/dev/ttyUSB0' on Linux, 'COM3' on Windows)
@@ -589,10 +588,15 @@ def serial_thread():
 
         time.sleep(0.1)
 
+    if ser.is_open:
+        ser.close()
+
 
 def thread_for_app():
+    global exit_flag
     app = App()
     app.mainloop()
+    exit_flag = True
 
 
 def press_key(key):
@@ -613,6 +617,9 @@ if __name__ == "__main__":
     app_thread.start()
 
     while 1:
+        if exit_flag:
+            break
+
         if received_gesture_bool:
             received_gesture_bool = False
         time.sleep(0.2)
