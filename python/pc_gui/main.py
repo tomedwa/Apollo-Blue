@@ -517,6 +517,8 @@ def serial_thread():
         switch_state_r_left, \
         switch_state_r_right
 
+    print_not_con = True
+
     while True:
         try:
             ser = serial.Serial(
@@ -525,7 +527,9 @@ def serial_thread():
                 timeout=1,  # Timeout in seconds for read operations
             )
         except:
-            print("USB not connected")
+            if print_not_con:
+                print("USB not connected")
+                print_not_con = False
             time.sleep(0.1)
             continue
 
@@ -580,6 +584,8 @@ def serial_thread():
 
         finally:
             ser.close()
+
+        print_not_con = True
 
         time.sleep(0.1)
 
