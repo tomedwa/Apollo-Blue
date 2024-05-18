@@ -5,6 +5,8 @@ import threading
 import time
 import pyautogui
 import serial
+import json
+import os
 
 customtkinter.set_appearance_mode(
     "System"
@@ -54,17 +56,14 @@ class App(customtkinter.CTk):
         )
         self.logo_label.grid(row=0, column=0, padx=20, pady=(20, 10))
         self.sidebar_button_1 = customtkinter.CTkButton(
-            self.sidebar_frame, command=self.sidebar_button_event, text="Option 1"
+            self.sidebar_frame, command=self.load_bindings, text="Load Gestures"
         )
         self.sidebar_button_1.grid(row=1, column=0, padx=20, pady=10)
         self.sidebar_button_2 = customtkinter.CTkButton(
-            self.sidebar_frame, command=self.sidebar_button_event, text="Option 2"
+            self.sidebar_frame, command=self.save_bindings, text="Save Gestures"
         )
         self.sidebar_button_2.grid(row=2, column=0, padx=20, pady=10)
-        self.sidebar_button_3 = customtkinter.CTkButton(
-            self.sidebar_frame, command=self.sidebar_button_event, text="Option 3"
-        )
-        self.sidebar_button_3.grid(row=3, column=0, padx=20, pady=10)
+
         self.appearance_mode_label = customtkinter.CTkLabel(
             self.sidebar_frame, text="Appearance Mode:", anchor="w"
         )
@@ -85,22 +84,6 @@ class App(customtkinter.CTk):
             command=self.change_scaling_event,
         )
         self.scaling_optionemenu.grid(row=8, column=0, padx=20, pady=(10, 20))
-
-        # create main entry and button
-        self.entry = customtkinter.CTkEntry(self, placeholder_text="CTkEntry")
-        self.entry.grid(
-            row=3, column=1, columnspan=2, padx=(20, 0), pady=(20, 20), sticky="nsew"
-        )
-
-        self.main_button_1 = customtkinter.CTkButton(
-            master=self,
-            fg_color="transparent",
-            border_width=2,
-            text_color=("gray10", "#DCE4EE"),
-        )
-        self.main_button_1.grid(
-            row=3, column=3, padx=(20, 20), pady=(20, 20), sticky="nsew"
-        )
 
         # Frame for keybinding
         self.frame_keybinding = customtkinter.CTkFrame(self)
@@ -323,8 +306,7 @@ class App(customtkinter.CTk):
         self.switch_r_right.grid(row=6, column=0, padx=10, pady=(0, 20), sticky="w")
 
         # set default values
-        self.sidebar_button_3.configure(state="disabled", text="Disabled CTkButton")
-        self.appearance_mode_optionemenu.set("Dark")
+        self.appearance_mode_optionemenu.set("System")
         self.scaling_optionemenu.set("100%")
 
     def open_input_dialog_event(self):
@@ -420,6 +402,103 @@ class App(customtkinter.CTk):
             else:
                 return False
         return True
+
+    def save_bindings(self):
+        global \
+            bind_left, \
+            bind_right, \
+            bind_up, \
+            bind_down, \
+            bind_r_left, \
+            bind_r_right, \
+            received_gesture_bool, \
+            switch_state_left, \
+            switch_state_right, \
+            switch_state_up, \
+            switch_state_down, \
+            switch_state_r_left, \
+            switch_state_r_right
+
+        data = {
+            "bind_left": bind_left,
+            "bind_right": bind_right,
+            "bind_up": bind_up,
+            "bind_down": bind_down,
+            "bind_r_left": bind_r_left,
+            "bind_r_right": bind_r_right,
+            "switch_state_left": switch_state_left,
+            "switch_state_right": switch_state_right,
+            "switch_state_up": switch_state_up,
+            "switch_state_down": switch_state_down,
+            "switch_state_r_left": switch_state_r_left,
+            "switch_state_r_right": switch_state_r_right,
+        }
+        file_path = "saved_gestures.json"
+        with open(file_path, "w") as file:
+            json.dump(data, file)
+
+    def set_switch_state(self, gesture: str, state: bool):
+        if gesture == "left":
+            if state:
+                print("balls")
+                self.switch_swipe_left.select()
+            else:
+                print("cock")
+                self.switch_swipe_left.deselect()
+
+        elif gesture == "right":
+            if state:
+                self.switch_swipe_right.select()
+            else:
+                self.switch_swipe_right.deselect()
+
+        elif gesture == "up":
+            if state:
+                self.switch_swipe_up.select()
+            else:
+                self.switch_swipe_up.deselect()
+
+        elif gesture == "down":
+            if state:
+                self.switch_swipe_down.select()
+            else:
+                self.switch_swipe_down.deselect()
+
+        elif gesture == "r_left":
+            if state:
+                self.switch_r_left.select()
+            else:
+                self.switch_r_left.deselect()
+
+        elif gesture == "r_right":
+            if state:
+                self.switch_r_right.select()
+            else:
+                self.switch_r_right.deselect()
+
+    def load_bindings(self):
+        file_path = "saved_gestures.json"
+        if os.path.exists(file_path):
+            try:
+                with open(file_path, "r") as file:
+                    data = json.load(file)
+                    self.set_new_keybinding("left", ",".join(data["bind_left"]))
+                    self.set_new_keybinding("right", ",".join(data["bind_right"]))
+                    self.set_new_keybinding("up", ",".join(data["bind_up"]))
+                    self.set_new_keybinding("down", ",".join(data["bind_down"]))
+                    self.set_new_keybinding("r_left", ",".join(data["bind_r_left"]))
+                    self.set_new_keybinding("r_right", ",".join(data["bind_r_right"]))
+                    self.set_switch_state("left", data["switch_state_left"])
+                    self.set_switch_state("right", data["switch_state_right"])
+                    self.set_switch_state("up", data["switch_state_up"])
+                    self.set_switch_state("down", data["switch_state_down"])
+                    self.set_switch_state("r_left", data["switch_state_r_left"])
+                    self.set_switch_state("r_right", data["switch_state_r_right"])
+
+                print(type(data["switch_state_left"]))
+
+            except json.JSONDecodeError:
+                print(f"Invalid json data in {file_path}")
 
 
 def serial_thread():
