@@ -379,7 +379,7 @@ class App(customtkinter.CTk):
 
     def check_valid_shortcut(self, binding: str) -> bool:
         valid_letters_and_numbers = list("1234567890qwertyuiopasdfghjklzxcvbnm")
-        valid_symbols = list("!@#$%^&*()-_=+;:',<.>? ")
+        valid_symbols = list("!@#$%^&*()-_=+;:',<.>?")
         valid_other = [
             "esc",
             "backspace",
