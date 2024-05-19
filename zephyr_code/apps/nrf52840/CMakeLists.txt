@@ -8,5 +8,4 @@ target_sources(app PRIVATE
     src/main.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../mylib/nrf52840_ibeacon_adv.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../mylib/nrf52840_uart.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../mylib/nrf52840_leds.c
 )

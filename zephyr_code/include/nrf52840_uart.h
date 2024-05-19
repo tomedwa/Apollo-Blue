@@ -8,6 +8,9 @@
 
 #define UART_THREAD_SLEEP_MS 10
 
+#define MSG_Q_SIZE 10
+extern struct k_msgq uart_q;
+
 void nrf52840_uart_init();
 
 #endif /* NRF52840_UART_H_ */
