@@ -407,6 +407,11 @@ start = 0
 
 ready = 1
 
+ser = serial.Serial("/dev/ttyACM2", 115200)
+ser.timeout = 1
+
+time.sleep(2)
+
 while True:
     try:
         # Update the data and check if the data is okay
@@ -446,13 +451,18 @@ while True:
                     print(np.max(res))
                     print(detected_ges)
                     if detected_ges == "left":
-                        pyautogui.press("left")
+                        ser.write(b"1$")
                     elif detected_ges == "right":
-                        pyautogui.press("right")
+                        ser.write(b"2$")
                     elif detected_ges == "up":
-                        pyautogui.press("up")
+                        ser.write(b"3$")
                     elif detected_ges == "down":
-                        pyautogui.press("down")
+                        ser.write(b"4$")
+                    elif detected_ges == "r_left":
+                        ser.write(b"5$")
+                    elif detected_ges == "r_right":
+                        ser.write(b"6$")
+
                 else:
                     print("No Gesture Detected")
 
