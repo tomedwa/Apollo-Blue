@@ -23,6 +23,8 @@ Visit the [Wiki](https://github.com/tomedwa/Apollo-Blue/wiki) for more informati
 
 - [Challenges and Issues](https://github.com/tomedwa/Apollo-Blue/wiki/Challenges-and-Issues)
 
+- [Machine Learning Approach](https://github.com/tomedwa/Apollo-Blue/wiki/Machine-Learning-Approach)
+
 **Equipment**
 
 - [Equipment required](https://github.com/tomedwa/Apollo-Blue/wiki/Equipment-Required)
