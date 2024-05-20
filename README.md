@@ -20,6 +20,8 @@ Visit the [Wiki](https://github.com/tomedwa/Apollo-Blue/wiki) for more informati
 
 - [User interface (GUI)](https://github.com/tomedwa/Apollo-Blue/wiki/GUI)
 
+- [M5Core2: Overview and Customization](https://github.com/tomedwa/Apollo-Blue/wiki/M5Core2:-Overview-and-Customization)
+  
 **Equipment**
 
 - [Equipment required](https://github.com/tomedwa/Apollo-Blue/wiki/Equipment-Required)
