@@ -32,3 +32,5 @@ Visit the [Wiki](https://github.com/tomedwa/Apollo-Blue/wiki) for more informati
 **Progress**
 
 - [Progress timeline](https://github.com/tomedwa/Apollo-Blue/wiki/Progress-Timeline)
+
+- [Reflection](https://github.com/tomedwa/Apollo-Blue/wiki/Reflection)
